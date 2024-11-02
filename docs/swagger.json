@@ -1,0 +1,298 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Car API",
+      "description": "API untuk mengelola data mobil",
+      "version": "1.0.0"
+    },
+    "paths": {
+      "/cars": {
+        "get": {
+          "summary": "Get all cars",
+          "tags": ["Cars"],
+          "parameters": [
+            {
+              "name": "page",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "default": 1
+              },
+              "description": "Page number for pagination"
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "default": 10
+              },
+              "description": "Number of items per page"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of cars",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PaginatedCars"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "post": {
+          "summary": "Create a new car",
+          "tags": ["Cars"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/CarInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Car created successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Car"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input data"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/cars/{id}": {
+        "get": {
+          "summary": "Get car by ID",
+          "tags": ["Cars"],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "description": "ID of the car to retrieve"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Car data retrieved",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Car"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Car not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "patch": {
+          "summary": "Update car by ID",
+          "tags": ["Cars"],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "description": "ID of the car to update"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/CarInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Car updated successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Car"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Car not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete car by ID",
+          "tags": ["Cars"],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "description": "ID of the car to delete"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Car deleted successfully"
+            },
+            "404": {
+              "description": "Car not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "Car": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "name": {
+              "type": "string",
+              "example": "Toyota Corolla"
+            },
+            "images": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": ["https://example.com/image.jpg"]
+            },
+            "stock": {
+              "type": "integer",
+              "example": 10
+            },
+            "price": {
+              "type": "integer",
+              "example": 20000
+            },
+            "userId": {
+              "type": "integer",
+              "example": 1
+            },
+            "status": {
+              "type": "string",
+              "example": "available"
+            },
+            "no_plat": {
+              "type": "string",
+              "example": "AB1234CD"
+            },
+            "tahun": {
+              "type": "integer",
+              "example": 2022
+            }
+          }
+        },
+        "CarInput": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "Toyota Corolla"
+            },
+            "images": {
+              "type": "string",
+              "format": "binary"
+            },
+            "stock": {
+              "type": "integer",
+              "example": 10
+            },
+            "price": {
+              "type": "integer",
+              "example": 20000
+            },
+            "status": {
+              "type": "string",
+              "example": "available"
+            },
+            "no_plat": {
+              "type": "string",
+              "example": "AB1234CD"
+            },
+            "tahun": {
+              "type": "integer",
+              "example": 2022
+            },
+            "userId": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        },
+        "PaginatedCars": {
+          "type": "object",
+          "properties": {
+            "totalItems": {
+              "type": "integer",
+              "example": 100
+            },
+            "totalPages": {
+              "type": "integer",
+              "example": 10
+            },
+            "currentPage": {
+              "type": "integer",
+              "example": 1
+            },
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Car"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
