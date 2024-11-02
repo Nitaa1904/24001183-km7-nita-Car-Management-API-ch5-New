@@ -4,8 +4,7 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Auth extends Model {
     static associate(models) {
-      // Definisikan asosiasi di sini jika ada
-      // Contoh: Auth.belongsTo(models.User, { foreignKey: 'userId' });
+      Auth.belongsTo(models.User, { foreignKey: 'userId', as: 'user' });
     }
   }
 
@@ -23,14 +22,17 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      confirmPassword: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
+      // confirmPassword: {
+      //   type: DataTypes.STRING,
+      //   allowNull: false,
+      // },
       userId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-      },
+        references: {
+          model: 'Users', // Tabel Users
+          key: 'id',
+        },
+      },  
     },
     {
       sequelize, // Pastikan ini terisi dengan objek sequelize yang benar

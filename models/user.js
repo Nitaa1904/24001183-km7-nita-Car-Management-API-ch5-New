@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       User.associate = function(models) {
-        User.hasMany(models.Car, { foreignKey: 'userId', as: 'cars' });
+            User.hasMany(models.Car, { foreignKey: 'userId', as: 'cars' });
+        User.hasOne(models.Auth, { as: 'auth', foreignKey: 'userId' });
       };
     }
   }
