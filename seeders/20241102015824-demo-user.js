@@ -1,32 +1,30 @@
-// seeders/XXXX-demo-user.js
 'use strict';
+const { faker } = require('@faker-js/faker');
+const bcrypt = require('bcrypt');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert('Users', [
-      {
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        password: 'hashedpassword1', // Gantilah dengan hash jika perlu
-        phone: '081234567890',
-        alamat: 'Jl. Mawar No. 1',
-        role: 'customer',
-        foto_profil: 'https://example.com/profile/johndoe.jpg',
+    const users = [];
+    const saltRounds = 10; // Jumlah putaran salt untuk bcrypt
+
+    for (let i = 0; i < 100; i++) { // Menghasilkan 100 data dummy
+      const password = 'password123'; // Password dummy sebelum di-hash
+      const hashedPassword = await bcrypt.hash(password, saltRounds); // Hash password
+
+      users.push({
+        name: faker.name.fullName(),
+        email: faker.internet.email(),
+        password: hashedPassword, // Simpan password yang sudah di-hash
+        phone: faker.phone.number('08##########'), // Format nomor telepon Indonesia
+        alamat: faker.address.streetAddress(),
+        role: faker.helpers.arrayElement(['customer', 'admin']),
+        foto_profil: faker.image.avatar(),
         createdAt: new Date(),
         updatedAt: new Date(),
-      },
-      {
-        name: 'Jane Smith',
-        email: 'jane.smith@example.com',
-        password: 'hashedpassword2',
-        phone: '081298765432',
-        alamat: 'Jl. Melati No. 2',
-        role: 'admin',
-        foto_profil: 'https://example.com/profile/janesmith.jpg',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }
-    ], {});
+      });
+    }
+
+    await queryInterface.bulkInsert('Users', users, {});
   },
 
   down: async (queryInterface, Sequelize) => {
